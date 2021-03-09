@@ -6,7 +6,7 @@ To compile your files
 To remove the generated executable
 
 ## Using executable
-```./a2 ⟨filename enclosed in double quotes⟩``
+```./a2 ⟨filename enclosed in double quotes⟩```
 To run the executable
 
 Example:
