@@ -1,3 +1,5 @@
+val args = CommandLine.arguments()
+
 structure a2LrVals = a2LrValsFun(structure Token = LrParser.Token)
 structure a2Lex = a2LexFun(structure Tokens = a2LrVals.Tokens);
 structure a2Parser =
@@ -30,14 +32,19 @@ fun parse (lexer) =
 
 val parseString = parse o stringToLexer
 
+
+
 fun parseFile (infile:string) =
    let 
     	val instream = TextIO.openIn infile
-	fun loop instream =
+	fun loop (instream,input) =
 		case TextIO.inputLine instream of
-	             SOME line => (print(parseString(line)); loop instream)
-    	    	   | NONE      => print("")
+	             SOME line =>  loop (instream,input^line)
+    	    	   | NONE      => print(parseString(input))
+				   					
     in
-	 loop instream before TextIO.closeIn instream
+	 loop (instream,"") before TextIO.closeIn instream
     end;
+
+parseFile(hd(args));
 

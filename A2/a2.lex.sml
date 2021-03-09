@@ -1,21 +1,25 @@
-functor a2LexFun(structure Tokens: a2_TOKENS)=
+(*#line 28.10 "a2.lex"*)functor a2LexFun(structure Tokens: a2_TOKENS)(*#line 1.1 "a2.lex.sml"*)
+=
    struct
     structure UserDeclarations =
       struct
-(* ML-Lex user declarations *)
+(*#line 1.1 "a2.lex"*)(* ML-Lex user declarations *)
 
 structure Tokens= Tokens
 type pos = int
 type svalue = Tokens.svalue
 type ('a,'b) token = ('a,'b) Tokens.token  
 type lexresult = (svalue, pos) token
+
+
+
 val output=[];
-
-
-
 val pos = ref 1
 val col = ref 1
-val eof = fn () => Tokens.EOF(!pos, !pos)
+val flag = ref false 
+val flag2 = ref false
+val out = ref "["
+val eof = fn () => (if !flag=true then OS.Process.exit(OS.Process.success) else if !flag2=false then print(substring((!out) ,0,size((!out))-2)^"]"^"\n\n") else print "";flag2:=true;Tokens.EOF(!pos, !pos))
 
 val error : string * int * int -> unit = fn
     (e,l1,l2) => TextIO.output(TextIO.stdOut,"Unknown Token:"
@@ -23,6 +27,7 @@ val error : string * int * int -> unit = fn
                 ^":"^e^"\n")
 
 
+(*#line 30.1 "a2.lex.sml"*)
 end (* end of user routines *)
 exception LexError (* raised if illegal leaf action tried *)
 structure Internal =
@@ -99,8 +104,9 @@ type result = UserDeclarations.lexresult
 	exception LexerError (* raised if illegal leaf action tried *)
 end
 
+structure YYPosInt : INTEGER = Int
 fun makeLexer yyinput =
-let	val yygone0=1
+let	val yygone0= YYPosInt.fromInt ~1
 	val yyb = ref "\n" 		(* buffer *)
 	val yybl = ref 1		(*buffer length *)
 	val yybufpos = ref 1		(* location of next character to use *)
@@ -120,37 +126,56 @@ let fun continue() = lex() in
 		case node of
 		    Internal.N yyk => 
 			(let fun yymktext() = String.substring(!yyb,i0,i-i0)
-			     val yypos = i0+ !yygone
+			     val yypos = YYPosInt.+(YYPosInt.fromInt i0, !yygone)
 			open UserDeclarations Internal.StartStates
  in (yybufpos := i; case yyk of 
 
 			(* Application actions *)
 
-  1 => (print("\n");pos := (!pos) + 1; col := 0;lex())
-| 12 => let val yytext=yymktext() in    
-                if yytext="TRUE" then (col := (!col) + size(yytext);print("CONST "^"\"TRUE\", ");Tokens.CONST(yytext,!pos,!pos))
-                else if yytext="FALSE" then (col := (!col) + size(yytext);print("CONST "^"\"FALSE\", ");Tokens.CONST(yytext,!pos,!pos))
-                else if yytext="NOT" then (col := (!col) + size(yytext);print("NOT "^"\"NOT\", ");Tokens.NOT(yytext,!pos,!pos))
-                else if yytext="AND" then (col := (!col) + size(yytext);print("AND "^"\"AND\", ");Tokens.AND(yytext,!pos,!pos))
-                else if yytext="OR" then (col := (!col) + size(yytext);print("OR "^"\"OR\", ");Tokens.OR(yytext,!pos,!pos))
-                else if yytext="XOR" then (col := (!col) + size(yytext);print("XOR "^"\"XOR\", ");Tokens.XOR(yytext,!pos,!pos))
-                else if yytext="EQUALS" then (col := (!col) + size(yytext);print("EQUALS "^"\"EQUALS\", ");Tokens.EQUALS(yytext,!pos,!pos))
-                else if yytext="IMPLIES" then (col := (!col) + size(yytext);print("IMPLIES "^"\"IMPLIES\", ");Tokens.IMPLIES(yytext,!pos,!pos))
-                else if yytext="IF" then (col := (!col) + size(yytext);print("IF "^"\"IF\", ");Tokens.IF(yytext,!pos,!pos))
-                else if yytext="THEN" then (col := (!col) + size(yytext);print("THEN "^"\"THEN\", ");Tokens.THEN(yytext,!pos,!pos))
-                else if yytext="ELSE" then (col := (!col) + size(yytext);print("ELSE "^"\"ELSE\", ");Tokens.ELSE(yytext,!pos,!pos))
-                else (col := (!col) + size(yytext);print("ID "^"\""^yytext^"\", ");Tokens.ID(yytext,!pos,!pos))
-             end
-| 14 => let val yytext=yymktext() in error(yytext,!pos,!col);lex() end
-| 3 => (col := (!col) + 1;lex())
-| 5 => (col := (!col) + 1;print("TERM "^"\";\",\n");Tokens.TERM(!pos,!pos))
-| 7 => (col := (!col) + 1;print("LPAREN "^"\"(\", ");Tokens.LPAREN(!pos,!pos))
-| 9 => (col := (!col) + 1;print("RPAREN "^"\"(\", ");Tokens.RPAREN(!pos,!pos))
+  1 => ((*#line 37.17 "a2.lex"*)!out=(!out)^"\n";pos := (!pos) + 1; col := 1;lex()(*#line 135.1 "a2.lex.sml"*)
+)
+| 12 => let val yytext=yymktext() in (*#line 47.17 "a2.lex"*)   
+                if yytext="TRUE" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"CONST "^"\"TRUE\", ";Tokens.CONST(yytext,!pos,!pos))
+                else if yytext="FALSE" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"CONST "^"\"FALSE\", ";Tokens.CONST(yytext,!pos,!pos))
+                else if yytext="NOT" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"NOT "^"\"NOT\", ";Tokens.NOT(yytext,!pos,!pos))
+                else if yytext="AND" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"AND "^"\"AND\", ";Tokens.AND(yytext,!pos,!pos))
+                else if yytext="OR" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"OR "^"\"OR\", ";Tokens.OR(yytext,!pos,!pos))
+                else if yytext="XOR" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"XOR "^"\"XOR\", ";Tokens.XOR(yytext,!pos,!pos))
+                else if yytext="EQUALS" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"EQUALS "^"\"EQUALS\", ";Tokens.EQUALS(yytext,!pos,!pos))
+                else if yytext="IMPLIES" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"IMPLIES "^"\"IMPLIES\", ";Tokens.IMPLIES(yytext,!pos,!pos))
+                else if yytext="IF" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"IF "^"\"IF\", ";Tokens.IF(yytext,!pos,!pos))
+                else if yytext="THEN" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"THEN "^"\"THEN\", ";Tokens.THEN(yytext,!pos,!pos))
+                else if yytext="ELSE" 
+                    then (col := (!col) + size(yytext);out:=(!out)^"ELSE "^"\"ELSE\", ";Tokens.ELSE(yytext,!pos,!pos))
+                else 
+                    (col := (!col) + size(yytext);out:=(!out)^"ID "^"\""^yytext^"\", ";Tokens.ID(yytext,!pos,!pos))
+            (*#line 162.1 "a2.lex.sml"*)
+ end
+| 14 => let val yytext=yymktext() in (*#line 74.17 "a2.lex"*)flag:= true;error(yytext,!pos,!col);col:=(!col)+1;lex()(*#line 164.1 "a2.lex.sml"*)
+ end
+| 3 => ((*#line 39.17 "a2.lex"*)col := (!col) + 1;lex()(*#line 166.1 "a2.lex.sml"*)
+)
+| 5 => ((*#line 41.17 "a2.lex"*)col := (!col) + 1;out:=(!out)^"TERM "^"\";\", ";Tokens.TERM(!pos,!pos)(*#line 168.1 "a2.lex.sml"*)
+)
+| 7 => ((*#line 43.17 "a2.lex"*)col := (!col) + 1;out:=(!out)^"LPAREN "^"\"(\", ";Tokens.LPAREN(!pos,!pos)(*#line 170.1 "a2.lex.sml"*)
+)
+| 9 => ((*#line 45.17 "a2.lex"*)col := (!col) + 1;out:=(!out)^"RPAREN "^"\"(\", ";Tokens.RPAREN(!pos,!pos)(*#line 172.1 "a2.lex.sml"*)
+)
 | _ => raise Internal.LexerError
 
 		) end )
 
-	val {fin,trans} = Unsafe.Vector.sub(Internal.tab, s)
+	val {fin,trans} = Vector.sub(Internal.tab, s)
 	val NewAcceptingLeaves = fin::AcceptingLeaves
 	in if l = !yybl then
 	     if trans = #trans(Vector.sub(Internal.tab,0))
@@ -162,13 +187,13 @@ let fun continue() = lex() in
 		                  else action(l,NewAcceptingLeaves))
 		  else (if i0=l then yyb := newchars
 		     else yyb := String.substring(!yyb,i0,l-i0)^newchars;
-		     yygone := !yygone+i0;
+		     yygone := YYPosInt.+(!yygone, YYPosInt.fromInt i0);
 		     yybl := String.size (!yyb);
 		     scan (s,AcceptingLeaves,l-i0,0))
 	    end
-	  else let val NewChar = Char.ord(Unsafe.CharVector.sub(!yyb,l))
+	  else let val NewChar = Char.ord(CharVector.sub(!yyb,l))
 		val NewChar = if NewChar<128 then NewChar else 128
-		val NewState = Char.ord(Unsafe.CharVector.sub(trans,NewChar))
+		val NewState = Char.ord(CharVector.sub(trans,NewChar))
 		in if NewState=0 then action(l,NewAcceptingLeaves)
 		else scan(NewState,NewAcceptingLeaves,l+1,i0)
 	end

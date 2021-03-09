@@ -1,6 +1,6 @@
 all:
-	ml-lex a2.lex
-	ml-yacc a2.yacc
-	sml loader.sml
+	mllex a2.lex
+	mlyacc a2.yacc
+	mlton a2.mlb
 clean:
-	rm *.out
+	rm a2
