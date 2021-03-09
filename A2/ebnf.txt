@@ -7,8 +7,9 @@ formula     ::= LPAREN formula RPAREN |
                 formula XOR formula | 
                 formula EQUALS formula |
                 formula IMPLIES formula |
+                not formula |
                 C
-C           ::= ID | CONST | NOT C
+C           ::= ID | CONST 
 
 TERM        ::= ";"
 LPAREN      ::="("

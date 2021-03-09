@@ -24,11 +24,11 @@ state 0:
 
 state 1:
 
-	formula : C .  (reduce by rule 11)
+	formula : C .  (reduce by rule 12)
 
 
 
-	.	reduce by rule 11
+	.	reduce by rule 12
 
 
 state 2:
@@ -122,33 +122,36 @@ state 7:
 
 state 8:
 
-	C : NOT . C 
+	formula : NOT . formula 
 
 	ID	shift 10
 	CONST	shift 9
 	NOT	shift 8
+	IF	shift 7
+	LPAREN	shift 6
 
-	C	goto 20
+	formula	goto 20
+	C	goto 1
 
 	.	error
 
 
 state 9:
 
-	C : CONST .  (reduce by rule 13)
+	C : CONST .  (reduce by rule 14)
 
 
 
-	.	reduce by rule 13
+	.	reduce by rule 14
 
 
 state 10:
 
-	C : ID .  (reduce by rule 12)
+	C : ID .  (reduce by rule 13)
 
 
 
-	.	reduce by rule 12
+	.	reduce by rule 13
 
 
 state 11:
@@ -291,11 +294,16 @@ state 19:
 
 state 20:
 
-	C : NOT C .  (reduce by rule 14)
+	formula : formula . AND formula 
+	formula : formula . OR formula 
+	formula : formula . XOR formula 
+	formula : formula . EQUALS formula 
+	formula : formula . IMPLIES formula 
+	formula : NOT formula .  (reduce by rule 11)
 
 
 
-	.	reduce by rule 14
+	.	reduce by rule 11
 
 
 state 21:
@@ -468,5 +476,5 @@ state 31:
 
 	.	error
 
-56 of 134 action table entries left after compaction
-28 goto table entries
+53 of 136 action table entries left after compaction
+29 goto table entries

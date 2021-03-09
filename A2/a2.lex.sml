@@ -13,7 +13,8 @@ val output=[];
 
 
 
-val pos = ref 0
+val pos = ref 1
+val col = ref 1
 val eof = fn () => Tokens.EOF(!pos, !pos)
 
 val error : string * int * int -> unit = fn
@@ -44,7 +45,7 @@ val s = [
 \\000"
 ),
  (1, 
-"\003\003\003\003\003\003\003\003\003\009\011\003\003\003\003\003\
+"\003\003\003\003\003\003\003\003\003\009\010\003\003\003\003\003\
 \\003\003\003\003\003\003\003\003\003\003\003\003\003\003\003\003\
 \\009\003\003\003\003\003\003\003\008\007\003\003\003\003\003\003\
 \\003\003\003\003\003\003\003\003\003\003\003\006\003\003\003\003\
@@ -65,17 +66,6 @@ val s = [
 \\005\005\005\005\005\005\005\005\005\005\005\000\000\000\000\000\
 \\000"
 ),
- (9, 
-"\000\000\000\000\000\000\000\000\000\010\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\010\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000"
-),
 (0, "")]
 fun f x = x 
 val s = List.map f (List.rev (tl (List.rev s))) 
@@ -87,14 +77,13 @@ in Vector.fromList(List.map g
 [{fin = [], trans = 0},
 {fin = [], trans = 1},
 {fin = [], trans = 1},
-{fin = [(N 15)], trans = 0},
-{fin = [(N 13),(N 15)], trans = 4},
-{fin = [(N 13)], trans = 4},
-{fin = [(N 6),(N 15)], trans = 0},
-{fin = [(N 10),(N 15)], trans = 0},
-{fin = [(N 8),(N 15)], trans = 0},
-{fin = [(N 4),(N 15)], trans = 9},
-{fin = [(N 4)], trans = 9},
+{fin = [(N 14)], trans = 0},
+{fin = [(N 12),(N 14)], trans = 4},
+{fin = [(N 12)], trans = 4},
+{fin = [(N 5),(N 14)], trans = 0},
+{fin = [(N 9),(N 14)], trans = 0},
+{fin = [(N 7),(N 14)], trans = 0},
+{fin = [(N 3),(N 14)], trans = 0},
 {fin = [(N 1)], trans = 0}])
 end
 structure StartStates =
@@ -137,26 +126,26 @@ let fun continue() = lex() in
 
 			(* Application actions *)
 
-  1 => (print("\n");pos := (!pos) + 1; lex())
-| 10 => (print("RPAREN "^"\"(\", ");Tokens.RPAREN(!pos,!pos))
-| 13 => let val yytext=yymktext() in    
-                if yytext="TRUE" then (print("CONST "^"\"TRUE\", ");Tokens.CONST(yytext,!pos,!pos))
-                else if yytext="FALSE" then (print("CONST "^"\"FALSE\", ");Tokens.CONST(yytext,!pos,!pos))
-                else if yytext="NOT" then (print("NOT "^"\"NOT\", ");Tokens.NOT(yytext,!pos,!pos))
-                else if yytext="AND" then (print("AND "^"\"AND\", ");Tokens.AND(yytext,!pos,!pos))
-                else if yytext="OR" then (print("OR "^"\"OR\", ");Tokens.OR(yytext,!pos,!pos))
-                else if yytext="XOR" then (print("XOR "^"\"XOR\", ");Tokens.XOR(yytext,!pos,!pos))
-                else if yytext="EQUALS" then (print("EQUALS "^"\"EQUALS\", ");Tokens.EQUALS(yytext,!pos,!pos))
-                else if yytext="IMPLIES" then (print("IMPLIES "^"\"IMPLIES\", ");Tokens.IMPLIES(yytext,!pos,!pos))
-                else if yytext="IF" then (print("IF "^"\"IF\", ");Tokens.IF(yytext,!pos,!pos))
-                else if yytext="THEN" then (print("THEN "^"\"THEN\", ");Tokens.THEN(yytext,!pos,!pos))
-                else if yytext="ELSE" then (print("ELSE "^"\"ELSE\", ");Tokens.ELSE(yytext,!pos,!pos))
-                else (print("ID "^"\""^yytext^"\", ");Tokens.ID(yytext,!pos,!pos))
+  1 => (print("\n");pos := (!pos) + 1; col := 0;lex())
+| 12 => let val yytext=yymktext() in    
+                if yytext="TRUE" then (col := (!col) + size(yytext);print("CONST "^"\"TRUE\", ");Tokens.CONST(yytext,!pos,!pos))
+                else if yytext="FALSE" then (col := (!col) + size(yytext);print("CONST "^"\"FALSE\", ");Tokens.CONST(yytext,!pos,!pos))
+                else if yytext="NOT" then (col := (!col) + size(yytext);print("NOT "^"\"NOT\", ");Tokens.NOT(yytext,!pos,!pos))
+                else if yytext="AND" then (col := (!col) + size(yytext);print("AND "^"\"AND\", ");Tokens.AND(yytext,!pos,!pos))
+                else if yytext="OR" then (col := (!col) + size(yytext);print("OR "^"\"OR\", ");Tokens.OR(yytext,!pos,!pos))
+                else if yytext="XOR" then (col := (!col) + size(yytext);print("XOR "^"\"XOR\", ");Tokens.XOR(yytext,!pos,!pos))
+                else if yytext="EQUALS" then (col := (!col) + size(yytext);print("EQUALS "^"\"EQUALS\", ");Tokens.EQUALS(yytext,!pos,!pos))
+                else if yytext="IMPLIES" then (col := (!col) + size(yytext);print("IMPLIES "^"\"IMPLIES\", ");Tokens.IMPLIES(yytext,!pos,!pos))
+                else if yytext="IF" then (col := (!col) + size(yytext);print("IF "^"\"IF\", ");Tokens.IF(yytext,!pos,!pos))
+                else if yytext="THEN" then (col := (!col) + size(yytext);print("THEN "^"\"THEN\", ");Tokens.THEN(yytext,!pos,!pos))
+                else if yytext="ELSE" then (col := (!col) + size(yytext);print("ELSE "^"\"ELSE\", ");Tokens.ELSE(yytext,!pos,!pos))
+                else (col := (!col) + size(yytext);print("ID "^"\""^yytext^"\", ");Tokens.ID(yytext,!pos,!pos))
              end
-| 15 => let val yytext=yymktext() in error(yytext,!pos,!pos);lex() end
-| 4 => (lex())
-| 6 => (print("TERM "^"\";\",\n");Tokens.TERM(!pos,!pos))
-| 8 => (print("LPAREN "^"\"(\", ");Tokens.LPAREN(!pos,!pos))
+| 14 => let val yytext=yymktext() in error(yytext,!pos,!col);lex() end
+| 3 => (col := (!col) + 1;lex())
+| 5 => (col := (!col) + 1;print("TERM "^"\";\",\n");Tokens.TERM(!pos,!pos))
+| 7 => (col := (!col) + 1;print("LPAREN "^"\"(\", ");Tokens.LPAREN(!pos,!pos))
+| 9 => (col := (!col) + 1;print("RPAREN "^"\"(\", ");Tokens.RPAREN(!pos,!pos))
 | _ => raise Internal.LexerError
 
 		) end )

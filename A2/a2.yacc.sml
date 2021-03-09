@@ -18,7 +18,6 @@ structure Token = Token
 local open LrTable in 
 val table=let val actionRows =
 "\
-\\001\000\001\000\012\000\002\000\011\000\003\000\010\000\000\000\
 \\001\000\001\000\012\000\002\000\011\000\003\000\010\000\009\000\009\000\
 \\014\000\008\000\000\000\
 \\001\000\001\000\012\000\002\000\011\000\003\000\010\000\009\000\009\000\
@@ -51,14 +50,14 @@ val table=let val actionRows =
 \\048\000\000\000\
 \"
 val actionRowNumbers =
-"\002\000\019\000\005\000\002\000\
-\\008\000\010\000\001\000\001\000\
-\\000\000\021\000\020\000\011\000\
-\\001\000\001\000\001\000\001\000\
-\\001\000\009\000\006\000\003\000\
-\\022\000\018\000\017\000\016\000\
-\\015\000\014\000\012\000\001\000\
-\\004\000\001\000\013\000\007\000"
+"\001\000\019\000\004\000\001\000\
+\\007\000\009\000\000\000\000\000\
+\\000\000\021\000\020\000\010\000\
+\\000\000\000\000\000\000\000\000\
+\\000\000\008\000\005\000\002\000\
+\\018\000\017\000\016\000\015\000\
+\\014\000\013\000\011\000\000\000\
+\\003\000\000\000\012\000\006\000"
 val gotoT =
 "\
 \\001\000\004\000\002\000\003\000\003\000\002\000\004\000\001\000\
@@ -70,7 +69,7 @@ val gotoT =
 \\000\000\
 \\003\000\018\000\004\000\001\000\000\000\
 \\003\000\019\000\004\000\001\000\000\000\
-\\004\000\020\000\000\000\
+\\003\000\020\000\004\000\001\000\000\000\
 \\000\000\
 \\000\000\
 \\000\000\
@@ -216,7 +215,7 @@ case (i392,stack)
 of  ( 0, ( ( _, ( MlyValue.program program1, program1left, 
 program1right)) :: rest671)) => let val  result = MlyValue.START (fn _
  => let val  (program as program1) = program1 ()
- in (program^"START -> program")
+ in (program^"START -> program\n")
 end)
  in ( LrTable.NT 4, ( result, program1left, program1right), rest671)
 
@@ -226,7 +225,8 @@ end
  let val  result = MlyValue.program (fn _ => let val  (statement as 
 statement1) = statement1 ()
  val  (program as program1) = program1 ()
- in (statement^program^"program -> statement program")
+ in (statement^"program -> statement,"^program^"program -> program, ")
+
 end)
  in ( LrTable.NT 0, ( result, statement1left, program1right), rest671)
 
@@ -239,7 +239,7 @@ end
 formula1, formula1left, _)) :: rest671)) => let val  result = 
 MlyValue.statement (fn _ => let val  (formula as formula1) = formula1
  ()
- in (formula1^"statement -> formula "^"TERM \";\" ")
+ in (formula1^"statement -> formula, "^"TERM \";\",")
 end)
  in ( LrTable.NT 1, ( result, formula1left, TERM1right), rest671)
 end
@@ -257,13 +257,13 @@ end
 formula1, _, _)) :: ( _, ( MlyValue.IF IF1, IF1left, _)) :: rest671))
  => let val  result = MlyValue.formula (fn _ => let val  (IF as IF1) =
  IF1 ()
- val  formula1 = formula1 ()
- val  THEN1 = THEN1 ()
+ val  (formula as formula1) = formula1 ()
+ val  (THEN as THEN1) = THEN1 ()
  val  formula2 = formula2 ()
  val  (ELSE as ELSE1) = ELSE1 ()
  val  formula3 = formula3 ()
  in (
-"IF \"IF\" "^formula1^"EQUALS \"EQUALS\" "^formula2^"ELSE \"ELSE\" "^formula3
+"IF \"IF\", "^formula1^"formula->formula,"^"THEN \"THEN\", "^formula2^"formula->formula,"^"ELSE \"ELSE\", "^formula3^"formula->formula,"
 )
 end)
  in ( LrTable.NT 2, ( result, IF1left, formula3right), rest671)
@@ -271,10 +271,12 @@ end
 |  ( 6, ( ( _, ( MlyValue.formula formula2, _, formula2right)) :: ( _,
  ( MlyValue.AND AND1, _, _)) :: ( _, ( MlyValue.formula formula1, 
 formula1left, _)) :: rest671)) => let val  result = MlyValue.formula
- (fn _ => let val  formula1 = formula1 ()
+ (fn _ => let val  (formula as formula1) = formula1 ()
  val  (AND as AND1) = AND1 ()
  val  formula2 = formula2 ()
- in (formula1^"AND \"AND\" "^formula2)
+ in (
+formula1^"formula->formula,"^"AND "^"\""^"AND"^"\""^","^formula2^"formula->formula,"
+)
 end)
  in ( LrTable.NT 2, ( result, formula1left, formula2right), rest671)
 
@@ -282,10 +284,12 @@ end
 |  ( 7, ( ( _, ( MlyValue.formula formula2, _, formula2right)) :: ( _,
  ( MlyValue.OR OR1, _, _)) :: ( _, ( MlyValue.formula formula1, 
 formula1left, _)) :: rest671)) => let val  result = MlyValue.formula
- (fn _ => let val  formula1 = formula1 ()
+ (fn _ => let val  (formula as formula1) = formula1 ()
  val  (OR as OR1) = OR1 ()
  val  formula2 = formula2 ()
- in (formula1^"OR \"OR\" "^formula2)
+ in (
+formula1^"formula->formula,"^"OR \"OR\","^formula2^"formula->formula,"
+)
 end)
  in ( LrTable.NT 2, ( result, formula1left, formula2right), rest671)
 
@@ -293,10 +297,12 @@ end
 |  ( 8, ( ( _, ( MlyValue.formula formula2, _, formula2right)) :: ( _,
  ( MlyValue.XOR XOR1, _, _)) :: ( _, ( MlyValue.formula formula1, 
 formula1left, _)) :: rest671)) => let val  result = MlyValue.formula
- (fn _ => let val  formula1 = formula1 ()
+ (fn _ => let val  (formula as formula1) = formula1 ()
  val  (XOR as XOR1) = XOR1 ()
  val  formula2 = formula2 ()
- in (formula1^"XOR \"XOR\" "^formula2)
+ in (
+formula1^"formula->formula,"^"XOR \"XOR\","^formula2^"formula->formula,"
+)
 end)
  in ( LrTable.NT 2, ( result, formula1left, formula2right), rest671)
 
@@ -304,10 +310,12 @@ end
 |  ( 9, ( ( _, ( MlyValue.formula formula2, _, formula2right)) :: ( _,
  ( MlyValue.EQUALS EQUALS1, _, _)) :: ( _, ( MlyValue.formula formula1
 , formula1left, _)) :: rest671)) => let val  result = MlyValue.formula
- (fn _ => let val  formula1 = formula1 ()
+ (fn _ => let val  (formula as formula1) = formula1 ()
  val  (EQUALS as EQUALS1) = EQUALS1 ()
  val  formula2 = formula2 ()
- in (formula1^"EQUALS \"EQUALS\" "^formula2)
+ in (
+formula1^"formula->formula,"^"EQUALS \"EQUALS\","^formula2^"formula->formula,"
+)
 end)
  in ( LrTable.NT 2, ( result, formula1left, formula2right), rest671)
 
@@ -315,40 +323,42 @@ end
 |  ( 10, ( ( _, ( MlyValue.formula formula2, _, formula2right)) :: ( _
 , ( MlyValue.IMPLIES IMPLIES1, _, _)) :: ( _, ( MlyValue.formula 
 formula1, formula1left, _)) :: rest671)) => let val  result = 
-MlyValue.formula (fn _ => let val  formula1 = formula1 ()
+MlyValue.formula (fn _ => let val  (formula as formula1) = formula1 ()
  val  (IMPLIES as IMPLIES1) = IMPLIES1 ()
  val  formula2 = formula2 ()
- in (formula1^"IMPLIES \"(\" "^formula2)
+ in (
+formula1^"formula->formula,"^"IMPLIES \"IMPLIES\","^formula2^"formula->formula,"
+)
 end)
  in ( LrTable.NT 2, ( result, formula1left, formula2right), rest671)
 
 end
-|  ( 11, ( ( _, ( MlyValue.C C1, C1left, C1right)) :: rest671)) => let
+|  ( 11, ( ( _, ( MlyValue.formula formula1, _, formula1right)) :: ( _
+, ( MlyValue.NOT NOT1, NOT1left, _)) :: rest671)) => let val  result =
+ MlyValue.formula (fn _ => let val  (NOT as NOT1) = NOT1 ()
+ val  (formula as formula1) = formula1 ()
+ in ("NOT "^"\""^"NOT"^"\","^formula^"formula->formula,")
+end)
+ in ( LrTable.NT 2, ( result, NOT1left, formula1right), rest671)
+end
+|  ( 12, ( ( _, ( MlyValue.C C1, C1left, C1right)) :: rest671)) => let
  val  result = MlyValue.formula (fn _ => let val  (C as C1) = C1 ()
- in (C^"formula -> C")
+ in (C^"formula -> C,")
 end)
  in ( LrTable.NT 2, ( result, C1left, C1right), rest671)
 end
-|  ( 12, ( ( _, ( MlyValue.ID ID1, ID1left, ID1right)) :: rest671)) =>
- let val  result = MlyValue.C (fn _ => let val  ID1 = ID1 ()
- in (ID1)
+|  ( 13, ( ( _, ( MlyValue.ID ID1, ID1left, ID1right)) :: rest671)) =>
+ let val  result = MlyValue.C (fn _ => let val  (ID as ID1) = ID1 ()
+ in ("ID "^"\""^ID1^"\""^",")
 end)
  in ( LrTable.NT 3, ( result, ID1left, ID1right), rest671)
 end
-|  ( 13, ( ( _, ( MlyValue.CONST CONST1, CONST1left, CONST1right)) :: 
-rest671)) => let val  result = MlyValue.C (fn _ => let val  CONST1 = 
-CONST1 ()
- in (CONST1)
+|  ( 14, ( ( _, ( MlyValue.CONST CONST1, CONST1left, CONST1right)) :: 
+rest671)) => let val  result = MlyValue.C (fn _ => let val  (CONST as 
+CONST1) = CONST1 ()
+ in ("CONST "^"\""^CONST1^"\""^",")
 end)
  in ( LrTable.NT 3, ( result, CONST1left, CONST1right), rest671)
-end
-|  ( 14, ( ( _, ( MlyValue.C C1, _, C1right)) :: ( _, ( MlyValue.NOT 
-NOT1, NOT1left, _)) :: rest671)) => let val  result = MlyValue.C (fn _
- => let val  (NOT as NOT1) = NOT1 ()
- val  (C as C1) = C1 ()
- in ("C -> NOT C")
-end)
- in ( LrTable.NT 3, ( result, NOT1left, C1right), rest671)
 end
 | _ => raise (mlyAction i392)
 end
