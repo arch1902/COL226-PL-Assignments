@@ -10,4 +10,4 @@ To remove the generated executable
 To run the executable
 
 Example:
-```./a2 test.txt```
+```./a2 "test.txt"```
