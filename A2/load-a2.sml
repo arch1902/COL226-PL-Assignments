@@ -30,3 +30,14 @@ fun parse (lexer) =
 
 val parseString = parse o stringToLexer
 
+fun parseFile (infile:string) =
+   let 
+    	val instream = TextIO.openIn infile
+	fun loop instream =
+		case TextIO.inputLine instream of
+	             SOME line => (print(parseString(line)); loop instream)
+    	    	   | NONE      => print("")
+    in
+	 loop instream before TextIO.closeIn instream
+    end;
+
