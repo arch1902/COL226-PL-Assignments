@@ -8,8 +8,8 @@ structure a2Parser =
      	       structure Lex = a2Lex)
      
 fun invoke lexstream =
-    	let fun print_error (s,pos:int,_) =
-		    TextIO.output(TextIO.stdOut,"Syntax Error:"^ (Int.toString pos) ^ "\n")
+    	let fun print_error (s,pos:int,col:int) =
+		    TextIO.output(TextIO.stdOut,s^" : "^ (Int.toString pos)^" : "^(Int.toString col)^ "\n")
 		in
 		    a2Parser.parse(0,lexstream,print_error,())
 		end

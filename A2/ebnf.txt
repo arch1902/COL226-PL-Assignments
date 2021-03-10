@@ -1,17 +1,25 @@
 program     ::= statement{statement}
 statement   ::= formula TERM
-formula     ::= LPAREN formula RPAREN |
-                IF formula THEN formula ELSE formula |
-                formula AND formula |
-                formula OR formula |
-                formula XOR formula | 
-                formula EQUALS formula |
-                formula IMPLIES formula |
-                not formula |
-                C
-C           ::= ID | CONST 
+formula     ::= exp |
+                cnd |
+                exp binop cnd |
+                exp IMPLIES cnd 
+cnd         ::= IF formula THEN formula ELSE formula |
+                NOT cnd
+exp         ::= alpha | 
+                alpha IMPLIES exp
+alpha       ::= beta | 
+                alpha binop beta
+beta        ::= ID |
+                CONST |
+                NOT beta |
+                LPAREN formula RPAREN
+binop       ::= AND |
+                OR |
+                XOR |
+                EQUALS
 
-TERM        ::= ";"
+TERM        ::=";"
 LPAREN      ::="("
 RPAREN      ::=")"
 IF          ::="IF"
@@ -26,12 +34,11 @@ NOT         ::="NOT"
 CONST       ::="TRUE" | "FALSE"
 ID          ::=Letter{Letter}
 
-
-Letter ::= UpperCase | LowerCase
-UpperCase ::=   “A” | “B” | “C” | “D” | “E” | “F” | “G” | “H” |
+Letter      ::= UpperCase | LowerCase
+UpperCase   ::=   “A” | “B” | “C” | “D” | “E” | “F” | “G” | “H” |
                 “I” | “J” | “K” | “L” | “M” | “N” | “O” | “P” | “Q” |
                 “R” | “S” | “T” | “U” | “V ” | “W” | “X” | “Y ” | “Z”
 
-LowerCase ::=   “a” | “b” | “c” | “d” | “e” | “f” | “g” | “h” |
+LowerCase   ::=   “a” | “b” | “c” | “d” | “e” | “f” | “g” | “h” |
                 “i” | “j” | “k” | “l” | “m” | “n” | “o” | “p” | “q” |
                 “r” | “s” | “t” | “u” | “v” | “w” | “x” | “y” | “z”

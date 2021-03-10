@@ -31,7 +31,6 @@
 %right NOT 
 
 
-
 (* %nonassoc *)
 
 
@@ -40,9 +39,9 @@
 
 %%
 
-  START : program (program^"START -> program\n")
+  START : program (program^"START -> program\n\n")
 
-  program : statement program (statement^"program -> statement,"^program^"program -> program, ") |  EOF ("")
+  program : statement program (statement^"program -> statement,"^program^"program -> program, ") | statement (statement^"program -> statement,")
 
   statement :  formula TERM (formula1^"statement -> formula, "^"TERM \";\",") 
 
