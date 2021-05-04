@@ -1,1 +1,1 @@
-# COL226-PL-Assignments
+# COL226-PL-Assignments taken by Prof. S. Arun Kumar in Spring'21

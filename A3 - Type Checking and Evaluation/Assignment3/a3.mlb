@@ -1,0 +1,11 @@
+local
+ $(SML_LIB)/basis/basis.mlb
+ $(SML_LIB)/mlyacc-lib/mlyacc-lib.mlb
+ ast.sml
+ evaluator.sml
+ a3.yacc.sig
+ a3.yacc.sml
+ a3.lex.sml
+in
+ load-a3.sml
+end
