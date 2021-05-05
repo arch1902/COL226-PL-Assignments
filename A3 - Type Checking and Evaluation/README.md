@@ -1,4 +1,4 @@
-#Type Checking and Evaluation
+# Type Checking and Evaluation
 
 ## To compile the lexer and parser
 ```ml-lex a3.lex```
