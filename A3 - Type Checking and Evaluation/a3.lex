@@ -53,6 +53,7 @@ digit=[0-9];
 ws = [\ \t];
 
 %%
+
 \n       => (pos := (!pos) + 1; lex());
 {ws}+    => (lex());
 ";"         => (Tokens.TERM(!pos,!pos));

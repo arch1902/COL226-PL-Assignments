@@ -8,7 +8,7 @@ type typEnv = (id * typ) list
 fun typEnvLookup (var: id, env:typEnv): typ = 
     case List.find(fn(x,_) => x = var) env of
         SOME (x,v) => v
-    |   NONE => raise Fail ("Variable" ^ var^"is w/o a type")
+    |   NONE => raise Fail ("Variable " ^ var^" is w/o a type")
 
 fun typEnvAdd(var:id , t:typ, env:typEnv):typEnv =
     (var,t)::env
@@ -18,6 +18,7 @@ fun getType(e:exp, env:typEnv):typ =
         NumExp _ => IntTy
       | StringExp _ => StrTy
       | VarExp x => typEnvLookup(x,env)
+      | BoolExp _ => BoolTy
       | AppExp(e1,e2) =>
         (case (getType(e1,env),getType(e2,env)) of
             (FnTy(t1,t2),t3) => 

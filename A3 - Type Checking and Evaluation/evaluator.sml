@@ -19,10 +19,11 @@ fun evalExp(e:exp, env:environment):value =
 
       | LetExp(ValDecl(x, e1), e2)  =>
             let
-                val v1 = evalExp (e1, env)
+                val v1 = evalExp(e1, env)
             in
                 evalExp(e2, envAdd (x, v1, env))
-                end	
+            end	
+      | BoolExp b => BoolVal b
       | CondExp(e1,e2,e3) =>
             (case evalExp(e1,env) of
                  BoolVal b  => if b then evalExp(e2,env) else evalExp(e3,env) 
