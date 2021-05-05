@@ -6,8 +6,6 @@
 ```ml-yacc a3.yacc```
 
 ## Using Interactive SML in TERMINAL
-```sml```
-
 ```use "loader.sml";```
 
 ## To build the AST
