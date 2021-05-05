@@ -1,6 +1,6 @@
 ## To compile the lexer and parser
->ml-lex a3.lex
->ml-yacc a3.yacc
+```ml-lex a3.lex```
+```ml-yacc a3.yacc```
 
 ## Using INTERACTIVE SML in TERMINAL
 >sml
