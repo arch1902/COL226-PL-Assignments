@@ -19,6 +19,13 @@ fun getType(e:exp, env:typEnv):typ =
       | StringExp _ => StrTy
       | VarExp x => typEnvLookup(x,env)
       | BoolExp _ => BoolTy
+      | UnExp (_,e1) => getType(e1,env)
+      | LetExp(ValDecl(x,e1),e2) => 
+            let 
+                val v1 = getType(e1,env)
+            in
+                getType(e2,typEnvAdd(x,v1,env))
+            end
       | AppExp(e1,e2) =>
         (case (getType(e1,env),getType(e2,env)) of
             (FnTy(t1,t2),t3) => 
@@ -43,6 +50,20 @@ fun getType(e:exp, env:typEnv):typ =
                     if t2 <> t3
                     then raise Fail "Type Error:Branches have different types"
                     else t2
+            end
+        )
+      | BinExp (b,e1,e2) =>
+        (
+            let
+                val t1 = getType(e1,env)
+                val t2 = getType(e2,env)
+            in
+                if t1 <> t2
+                then raise Fail " Binary Operation on different types ! "
+                else if b = Equals then BoolTy
+                else if b = Lessthan then BoolTy
+                else if b = Greaterthan then BoolTy
+                else t2
             end
         )
       | FunExp(fname,x1,t1,t2,e) =>
