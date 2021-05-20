@@ -1,1 +1,3 @@
-# COL226-PL-Assignments taken by Prof. S. Arun Kumar in Spring'21
+# COL226-PL-Assignments taken in Spring'21
+## Under Prof. S. Arun Kumar and Prof. Subodh Vishnu Sharma
+Each folder contains the respective problem statement , relevant code and testcases.
